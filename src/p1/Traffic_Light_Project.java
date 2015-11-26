@@ -1,11 +1,10 @@
 package p1;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -13,6 +12,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 /**
  * Traffic_Light_Project.java
@@ -33,6 +33,7 @@ public class Traffic_Light_Project extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
         //create a pane
         Pane pane = new Pane();
 
@@ -75,33 +76,17 @@ public class Traffic_Light_Project extends Application {
         pane.getChildren().add(yCircle);
         pane.getChildren().add(rCircle);
 
-        //create 3 radio buttons
-        RadioButton rbGreen = new RadioButton("Green");
-        RadioButton rbYellow = new RadioButton("Yellow");
-        RadioButton rbRed = new RadioButton("Red");
-
-        //add radio buttons to a toggle group
-        ToggleGroup tgColors = new ToggleGroup();
-        rbGreen.setToggleGroup(tgColors);
-        rbYellow.setToggleGroup(tgColors);
-        rbRed.setToggleGroup(tgColors);
-
-        //add radio buttons to a HBox
-        HBox hBox = new HBox(10, rbGreen, rbYellow, rbRed);
-
-        //put pane and HBox in a VBox
-        VBox vBox = new VBox(10, pane, hBox);
-
-        //add the VBox to the scene
-        Scene scene = new Scene(vBox, 200, 450);
+        //add the pane to the scene
+        Scene scene = new Scene(pane, 170, 420);
 
         //set up the stage and show it
         primaryStage.setTitle("Traffic Light Project");
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        //create an event handler to handle the three radio buttons
+        /*//create an event handler to handle the event every second from the keyframe and run the lights
         EventHandler<ActionEvent> handler = e -> {
+
             if(rbGreen.isSelected())        //if radio button for green is selected
             {
                 gCircle.setFill(Color.GREEN);   //set green light on
@@ -120,11 +105,46 @@ public class Traffic_Light_Project extends Application {
                 yCircle.setFill(Color.WHITE);   //set yellow light off
                 rCircle.setFill(Color.RED);     //set red light on
             }
-        };
+        };*/
 
-        //attach the three radio buttons to the event handler
-        rbGreen.setOnAction(handler);
-        rbYellow.setOnAction(handler);
-        rbRed.setOnAction(handler);
+        //create an animation to control the flashing of the green light indefinitely
+        Timeline gAnimation = new Timeline();  //create timeline
+        gAnimation.setCycleCount(Timeline.INDEFINITE);   //make timeline repeat indefinitely
+        KeyValue kvGon = new KeyValue(gCircle.fillProperty(), Color.GREEN); //keyvalue for Green light ON
+        KeyFrame kfGon = new KeyFrame(Duration.seconds(15), kvGon);
+        KeyValue kvGoff = new KeyValue(gCircle.fillProperty(), Color.WHITE);
+        KeyFrame kfGoff = new KeyFrame(Duration.seconds(12), kvGoff);
+        gAnimation.getKeyFrames().add(0, kfGon);
+        gAnimation.getKeyFrames().add(1, kfGoff);
+
+        //create an animation to control the flashing of the yellow light indefinitely
+        Timeline yAnimation = new Timeline();  //create timeline
+        yAnimation.setCycleCount(Timeline.INDEFINITE);   //make timeline repeat indefinitely
+        KeyValue kvYoff1 = new KeyValue(yCircle.fillProperty(), Color.WHITE); //keyvalue for Yellow light OFF
+        KeyFrame kfYoff1 = new KeyFrame(Duration.seconds(15), kvYoff1);       //keyframe for Yellow light OFF
+        KeyValue kvYon = new KeyValue(yCircle.fillProperty(), Color.YELLOW);  //keyvalue for Yellow light ON
+        KeyFrame kfYon = new KeyFrame(Duration.seconds(2), kvYon);            //keyframe for Yellow light ON
+        KeyValue kvYoff2 = new KeyValue(yCircle.fillProperty(), Color.WHITE); //keyvalue for Yellow Light OFF
+        KeyFrame kfYoff2 = new KeyFrame(Duration.seconds(10), kvYoff2);       //keyframe for Yellow Light OFF
+        gAnimation.getKeyFrames().add(0, kfYoff1);
+        gAnimation.getKeyFrames().add(1, kfYon);
+        gAnimation.getKeyFrames().add(2, kfYoff2);
+
+        //create an animation to control the flashing of the red light indefinitely
+        Timeline rAnimation = new Timeline();  //create timeline
+        rAnimation.setCycleCount(Timeline.INDEFINITE);   //make timeline repeat indefinitely
+        KeyValue kvRoff = new KeyValue(rCircle.fillProperty(), Color.WHITE); //keyvalue for Red light OFF
+        KeyFrame kfRoff = new KeyFrame(Duration.seconds(17), kvRoff);        //keyframe for Red light OFF
+        KeyValue kvRon = new KeyValue(rCircle.fillProperty(), Color.RED);    //keyvalue for Red light ON
+        KeyFrame kfRon = new KeyFrame(Duration.seconds(2), kvRon);           //keyframe for Red light ON
+        gAnimation.getKeyFrames().add(0, kfRoff);
+        gAnimation.getKeyFrames().add(1, kfRon);
+
+        //start animations
+        gAnimation.play();
+        yAnimation.play();
+        rAnimation.play();
+
+
     }
 }
