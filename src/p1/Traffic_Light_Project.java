@@ -15,7 +15,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
 /**
- * Traffic_Light_Exercise.java
+ * Traffic_Light_Project.java
  *
  * Phillip Dingus
  * CIS150-401 Intro to Object-Oriented Programming
@@ -24,8 +24,10 @@ import javafx.scene.shape.Rectangle;
  *
  * This program will create a window with a simulated traffic light, comprised of a
  * rectangle outer edge and three circles for the green, yellow, and red lights.
- * The lights will be controlled by 3 toggle switches, with only one light being
- * lit at a time, and all lights off at the start of the program.
+ * The lights will cycle automatically with the following timing:
+ * Green - 15 seconds
+ * Yellow - 2 seconds
+ * Red - 10 seconds
  */
 public class Traffic_Light_Project extends Application {
 
