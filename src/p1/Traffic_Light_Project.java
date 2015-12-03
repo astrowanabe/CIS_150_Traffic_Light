@@ -33,9 +33,10 @@ public class Traffic_Light_Project extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        final int[] cycleCnt = {1};    //holds current place in 3-color cycle
 
         //create a pane
-        Pane pane = new Pane();
+        final Pane[] pane = {new Pane()};
 
         //create rectangular outline of traffic light
         Rectangle rectangle = new Rectangle();
@@ -71,13 +72,13 @@ public class Traffic_Light_Project extends Application {
         rCircle.setFill(Color.WHITE);
 
         //add the shapes to a pane
-        pane.getChildren().add(rectangle);
-        pane.getChildren().add(gCircle);
-        pane.getChildren().add(yCircle);
-        pane.getChildren().add(rCircle);
+        pane[0].getChildren().add(rectangle);
+        pane[0].getChildren().add(gCircle);
+        pane[0].getChildren().add(yCircle);
+        pane[0].getChildren().add(rCircle);
 
         //add the pane to the scene
-        Scene scene = new Scene(pane, 170, 420);
+        Scene scene = new Scene(pane[0], 170, 420);
 
         //set up the stage and show it
         primaryStage.setTitle("Traffic Light Project");
@@ -106,7 +107,7 @@ public class Traffic_Light_Project extends Application {
                 rCircle.setFill(Color.RED);     //set red light on
             }
         };*/
-
+/*
         //create an animation to control the flashing of the green light indefinitely
         Timeline gAnimation = new Timeline();  //create timeline
         gAnimation.setCycleCount(Timeline.INDEFINITE);   //make timeline repeat indefinitely
@@ -144,6 +145,39 @@ public class Traffic_Light_Project extends Application {
         gAnimation.play();
         yAnimation.play();
         rAnimation.play();
+*/
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    while(true) {
+                        if(cycleCnt[0] == 1) {
+                            gCircle.fillProperty() = Color.GREEN;
+                            yCircle.fillProperty() = Color.WHITE;
+                            rCircle.fillProperty() = Color.WHITE;
+                            Thread.sleep(15000);
+                        } else if (cycleCnt[0] == 2) {
+                            gCircle.fillProperty() = Color.WHITE;
+                            yCircle.fillProperty() = Color.YELLOW;
+                            rCircle.fillProperty() = Color.WHITE;
+                            Thread.sleep(2000);
+                        } else if (cycleCnt[0] == 3) {
+                            gCircle.fillProperty() = Color.WHITE;
+                            yCircle.fillProperty() = Color.WHITE;
+                            rCircle.fillProperty() = Color.RED;
+                            Thread.sleep(10000);
+                        }
+                        cycleCnt[0]++;
+                        if (cycleCnt[0] == 4) {
+                            cycleCnt[0] = 1;
+                        }
+                    }
+                }
+                catch (InterruptedException ex){
+
+                }
+            }
+        }).start();
 
 
     }
